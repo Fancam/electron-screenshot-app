@@ -28,7 +28,11 @@ module.exports = function (options, callback) {
     'enable-larger-than-screen': true,
     'skip-taskbar': true,
     'overlay-scrollbars': true,
-    'direct-write': true
+    'direct-write': true,
+    'web-preferences': {
+       "webgl": true,
+       "web-security": false
+    }
   });
 
   // Workaround for https://github.com/atom/electron/issues/2610
@@ -55,6 +59,7 @@ module.exports = function (options, callback) {
     // Remove any loadTimeout
     clearTimeout(loadTimeout);
 
+    var pLoadEvent = 'pLoaded-' + popupWindow.id;
     var loadEvent = 'Loaded-' + popupWindow.id;
     var sizeEvent = 'Size-' + popupWindow.id;
 
@@ -74,10 +79,16 @@ module.exports = function (options, callback) {
           'document.body.scrollTop=' + (options.pageOffset || 0) + ';' +
           '__electron__ra(__electron__load);' +
         '});' +
-      '}');
+      '}' +
+      'document.addEventListener("pano-loaded", function() { ' +
+        'window.__electron__ipc.send("'+ pLoadEvent + '", { devicePixelRatio: window.devicePixelRatio });' +
+      '});'
+    );
+
+    var loadEventName = (options.pano) ? pLoadEvent : loadEvent;
 
     // Register the IPC load event once
-    ipc.once(loadEvent, function (e, meta) {
+    ipc.once(loadEventName, function (e, meta) {
       // Delay the screenshot
       setTimeout(function () {
 
