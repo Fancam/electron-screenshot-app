@@ -22,7 +22,11 @@ module.exports = function (options, callback) {
 		transparent: options.transparent || false,
 		enableLargerThanScreen: true,
 		skipTaskbar: true,
-		directWrite: true
+		directWrite: true,
+		webPreferences: {
+			webSecurity: false,
+			defaultEncoding: 'utf-8'
+		}
 	});
 
 	const cleanup = () => {
