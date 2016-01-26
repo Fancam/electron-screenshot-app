@@ -54,7 +54,7 @@ module.exports = function (options, callback) {
 		const panoloadEvent = `PanoLoaded-${popupWindow.id}`;
 		const sizeEvent = `Size-${popupWindow.id}`;
 
-		const loadEventName = (options.pano) ? pLoadEvent : loadEvent;
+		const loadEventName = (options.pano) ? panoloadEvent : loadEvent;
 
 		// Register the IPC load event once
 		ipcMain.once(loadEventName, (e, meta) => {
